@@ -2,22 +2,24 @@
 #include <stdlib.h>
 #include <math.h>
 #include <unistd.h>
-#include "gEquation.c"
+// #include "gEquation.c"
 #define _USE_MATH_DEFINES
 // #include "director.c"
 #include <dirent.h>
-
+#include "gEquation.c"
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
 #include "isDirEmpty.c"
 void director();
+int isDirEmpty();
+// float gEquation();
 
 void gainer2(int m, float quality, float Cr, float Lr, float Lm, float gMin, float gMax)
 {
-    float frqW0 = 1 / sqrt(Lr * Cr);
+    float frqW0 = 1 / (2 * M_PI * sqrt(Lr * Cr));
 
-    if (frqW0 < 1e6) // if frequenci of LC is lower than 1Mhz
+    if (frqW0 < 1e6 && frqW0 > 5 * 1e5) // if frequenci of LC is lower than 1Mhz
     {
 
         FILE *img;
@@ -33,9 +35,9 @@ void gainer2(int m, float quality, float Cr, float Lr, float Lm, float gMin, flo
 
         // for (int i = -1; i < 1; i++)
         {
-            for (double j = 0; j <= 200; j++)
+            for (double j = 0; j <= 20; j++)
             {
-                frqWx = j / 100; //* pow(10, i);
+                frqWx = j / 10; //* pow(10, i);
                 if (frqWx != 0)
                 {
                     frqW = frqW0 * frqWx;
@@ -74,7 +76,7 @@ void gainer2(int m, float quality, float Cr, float Lr, float Lm, float gMin, flo
 
         if (isDirEmpty(directorName) != 1)
         {
-            printf("%s", directorName);
+            printf("New values: %s\n", directorName);
             rmdir(directorName);
         }
     }
